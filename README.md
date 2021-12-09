@@ -2,7 +2,7 @@
 
 集成指南针、方位角、侧倾角、俯仰角、经纬度
 
-![截图](raw/master/static/img.png)
+![截图](../../raw/master/static/img.png)
 
 # 使用
 
