@@ -1,0 +1,25 @@
+buildscript {
+    Properties properties = new Properties()
+    properties.load(new FileInputStream(new File(rootProject.rootDir, "local.properties")))
+    def mavenUrl = properties.get("mavenUrl")
+    def pluginName = properties.get("pluginName")
+
+    repositories {
+        if (mavenUrl != null) {
+            maven { url mavenUrl }
+        }
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:7.0.3"
+        if (pluginName != null) {
+            classpath pluginName
+        }
+    }
+}
+
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
