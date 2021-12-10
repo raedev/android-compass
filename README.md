@@ -55,3 +55,20 @@ public class CompassInfo implements Parcelable {
 # 指南针图片
 
 `CompassImageView` 为指南针图片实现，设置方法跟`ImageView`一致，图片的设计规范为：`12点钟方向为正北`。
+
+# 示意图
+
+英文示意图
+
+![英文示意图](../../raw/master/static/img1.png)
+
+中文示意图
+
+![中文示意图](../../raw/master/static/img2.png)
+
+- `方位角` 为沿着`Z轴`滚动的方向
+- `俯仰角` 为沿着`X轴`滚动的方向
+- `侧倾角` 为沿着`Y轴`滚动的方向
+
+当手机90度横屏时X轴和Y轴相互转换，即沿着`X轴`的方向为俯仰角，其他旋转方向以此类推。
+
