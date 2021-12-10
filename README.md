@@ -60,11 +60,11 @@ public class CompassInfo implements Parcelable {
 
 英文示意图
 
-![英文示意图](../../raw/master/static/img1.png)
+![英文示意图](../../raw/master/static/img1.jpg)
 
 中文示意图
 
-![中文示意图](../../raw/master/static/img2.png)
+![中文示意图](../../raw/master/static/img2.jpg)
 
 - `方位角` 为沿着`Z轴`滚动的方向
 - `俯仰角` 为沿着`X轴`滚动的方向
