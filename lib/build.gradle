@@ -1,4 +1,7 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
 
 if (new File(project.projectDir, "upload.gradle").exists()) {
     apply from: 'upload.gradle'
@@ -33,3 +36,33 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
 }
 
+
+afterEvaluate {
+    publishing {
+        publications {
+            mavenJar(MavenPublication) {
+                from components.release
+                groupId = 'com.github.raedev'
+                artifactId = 'compass'
+                version = '1.0.0'
+                pom {
+                    name = 'android-compass'
+                    url = 'https://github.com/raedev/android-compass'
+                    developers {
+                        developer {
+                            id = 'RAE'
+                            name = 'RAE'
+                            email = 'raedev@qq.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

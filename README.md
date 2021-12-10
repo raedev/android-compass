@@ -1,5 +1,7 @@
 # android-compass
 
+[![](https://jitpack.io/v/raedev/android-compass.svg)](https://jitpack.io/#raedev/android-compass)
+
 集成指南针、方位角、侧倾角、俯仰角、经纬度
 
 ![截图](../../raw/master/static/img.png)
@@ -7,7 +9,7 @@
 # 使用
 
 ```java
-// 示例话指南针管理器
+// 实例指南针管理器
 CompassManager manager=new CompassManager(this);
 // 添加回调监听
 manager.addCompassChangedListener(this);
