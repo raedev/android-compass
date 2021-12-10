@@ -1,6 +1,7 @@
 package com.github.raedev.compass;
 
 import android.os.Bundle;
+import android.view.Surface;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ public class BaseDemoActivity extends AppCompatActivity implements CompassChange
 
     private TextView mMessageView;
     private TextView mErrorView;
+    private int mOrientation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,11 +33,16 @@ public class BaseDemoActivity extends AppCompatActivity implements CompassChange
         manager.addCompassChangedListener(this);
         manager.addCompassChangedListener(compassView);
         manager.register(this);
+        mOrientation = getWindowManager().getDefaultDisplay().getRotation();
     }
 
     @Override
     public void onCompassChanged(CompassInfo compass) {
-        mMessageView.setText(compass.toString());
+        String msg = compass.toString();
+        if (mOrientation == Surface.ROTATION_90) {
+            msg = msg.replace("\n", ",");
+        }
+        mMessageView.setText(msg);
     }
 
     @Override

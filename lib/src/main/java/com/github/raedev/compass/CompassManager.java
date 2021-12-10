@@ -62,15 +62,14 @@ public final class CompassManager extends CompassSensorListener implements Lifec
     private final Context mContext;
     private final SensorManager mSensorManager;
     private final LocationManager mLocationManager;
-    //    private final WindowManager mWindowManager;
     private final CompassInfo mCompass;
 
     public CompassManager(Context context) {
+        super(context);
         mContext = context;
         mEnableLocation = true;
         mCompass = new CompassInfo();
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-//        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
