@@ -25,14 +25,21 @@ dependencies {
 # 集成使用
 
 ```java
-// 实例指南针管理器
-CompassManager manager=new CompassManager(this);
-// 添加回调监听
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // ... 省略其他代码
+        // 实例指南针管理器
+        CompassManager manager = new CompassManager(this);
+        // 添加回调监听
         manager.addCompassChangedListener(this);
-// 指南针图片（可自行实现CompassChangedListener自定义View）
+        // 指南针图片（可自行实现CompassChangedListener自定义View）
         manager.addCompassChangedListener(compassView);
-// 注册并绑定到当前生命周期
+        // 注册并绑定到当前生命周期
         manager.register(this);
+    }
+}
 ```
 
 # 指南针参数
@@ -76,13 +83,7 @@ public class CompassInfo implements Parcelable {
 
 # 示意图
 
-英文示意图
-
-![英文示意图](../../raw/master/static/img1.jpg)
-
-中文示意图
-
-![中文示意图](../../raw/master/static/img2.jpg)
+![示意图](../../raw/master/static/img2.png)
 
 - `方位角` 为沿着`Z轴`滚动的方向
 - `俯仰角` 为沿着`X轴`滚动的方向
