@@ -10,11 +10,11 @@
 // 示例话指南针管理器
 CompassManager manager=new CompassManager(this);
 // 添加回调监听
-        manager.addCompassChangedListener(this);
+manager.addCompassChangedListener(this);
 // 指南针图片（可自行实现CompassChangedListener自定义View）
-        manager.addCompassChangedListener(compassView);
+manager.addCompassChangedListener(compassView);
 // 注册并绑定到当前生命周期
-        manager.register(this);
+manager.register(this);
 ```
 
 # 指南针参数
