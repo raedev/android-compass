@@ -1,8 +1,13 @@
 buildscript {
-    Properties properties = new Properties()
-    properties.load(new FileInputStream(new File(rootProject.rootDir, "local.properties")))
-    def mavenUrl = properties.get("mavenUrl")
-    def pluginName = properties.get("pluginName")
+    def file = new File(rootProject.rootDir, "local.properties")
+    def mavenUrl = null
+    def pluginName = null
+    if (file.exists()) {
+        Properties properties = new Properties()
+        properties.load(new FileInputStream(file))
+        mavenUrl = properties.get("mavenUrl")
+        pluginName = properties.get("pluginName")
+    }
 
     repositories {
         if (mavenUrl != null) {

@@ -6,17 +6,33 @@
 
 ![截图](../../raw/master/static/img.png)
 
-# 使用
+# 依赖
+
+```groovy
+// root build.gradle
+buildscript {
+    repositories {
+        // ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+// project build.gradle
+dependencies {
+    implementation 'com.github.raedev:compass:$TAG' // TAG取JitPack徽章最新版本
+}
+```
+
+# 集成使用
 
 ```java
 // 实例指南针管理器
 CompassManager manager=new CompassManager(this);
 // 添加回调监听
-manager.addCompassChangedListener(this);
+        manager.addCompassChangedListener(this);
 // 指南针图片（可自行实现CompassChangedListener自定义View）
-manager.addCompassChangedListener(compassView);
+        manager.addCompassChangedListener(compassView);
 // 注册并绑定到当前生命周期
-manager.register(this);
+        manager.register(this);
 ```
 
 # 指南针参数
