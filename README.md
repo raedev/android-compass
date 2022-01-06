@@ -45,13 +45,6 @@ public class MainActivity extends AppCompatActivity {
 # 指南针参数
 
 ```java
-
-/**
- * 指南针实体
- * @author RAE
- * @date 2021/12/08
- * Copyright (c) https://github.com/raedev All rights reserved.
- */
 public class CompassInfo implements Parcelable {
 
     /**

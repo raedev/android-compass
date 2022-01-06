@@ -2,6 +2,8 @@ package com.github.raedev.compass;
 
 import android.content.Context;
 import android.hardware.SensorListener;
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
@@ -37,6 +39,7 @@ public class CompassSensorListener implements SensorListener {
         }
     }
 
+
     /**
      * 修复方位角横版时仰角过大漂移问题
      * @param values 原始数据
@@ -47,15 +50,23 @@ public class CompassSensorListener implements SensorListener {
         float x = values[0];
         // 仰角
         int pitch = (int) Math.rint(Math.abs(values[1]));
+        String model = Build.MODEL;
+        // 华为Meta10
+        if (TextUtils.equals("ALP-AL00", model)) {
+            return calcX(x, pitch);
+        }
+        return x;
+    }
+
+    protected float calcX(float x, float pitch) {
         // 当仰角处于[55,125] 产生漂移
         if (pitch >= 55 && pitch <= 125) {
             float fix = (x + 270) % 360;
             if (BuildConfig.DEBUG) {
-                Log.w("rae", "after fix：[" + pitch + "] " + values[0] + " >> " + fix);
+                Log.w("rae", "after fix：[" + pitch + "] " + x + " >> " + fix);
             }
             return fix;
         }
-
         return x;
     }
 

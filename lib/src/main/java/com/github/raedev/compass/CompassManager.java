@@ -47,6 +47,7 @@ public final class CompassManager extends CompassSensorListener implements Lifec
      * 是否运行中
      */
     private boolean mRunning;
+
 //    /**
 //     * 加速度
 //     */
@@ -179,8 +180,8 @@ public final class CompassManager extends CompassSensorListener implements Lifec
 //            notifyException(new UnsupportedOperationException("当前手机传感器无法满足方位角功能需求"));
 //        }
 
-        mSensorManager.registerListener(this, Sensor.TYPE_ACCELEROMETER, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, Sensor.TYPE_GYROSCOPE, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, Sensor.TYPE_ACCELEROMETER, SensorManager.SENSOR_DELAY_UI);
+//        mSensorManager.registerListener(this, Sensor.TYPE_GYROSCOPE, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
