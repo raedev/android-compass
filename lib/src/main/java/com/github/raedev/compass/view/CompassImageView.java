@@ -24,7 +24,7 @@ public class CompassImageView extends AppCompatImageView implements CompassChang
     /**
      * 刷新间隔
      */
-    protected int mRefreshTime = 200;
+    protected int mRefreshTime = 150;
 
     @Nullable
     protected CompassInfo mCompass;
