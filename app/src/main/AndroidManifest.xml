@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Compass">
         <activity
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             android:name=".BaseDemoActivity"
             android:exported="true">
             <intent-filter>

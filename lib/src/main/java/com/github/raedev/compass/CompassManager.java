@@ -33,21 +33,32 @@ public final class CompassManager implements LifecycleEventObserver {
     private final Context mContext;
     private final CompassChangedListener mProxyEventListener;
     /**
-     * 是否允许位置
-     */
-    private boolean mEnableLocation = true;
-    /**
      * 是否运行中
      */
     private boolean mRunning;
     private SensorProvider mCurrentSensorProvider;
-    private LocationProvider mLocationProvider;
+    private final LocationProvider mLocationProvider;
+    /**
+     * 延迟回调时间，默认0为不延迟
+     */
+    private int delay = 0;
 
     public CompassManager(Context context) {
         mContext = context;
         mProxyEventListener = new CompassChangedListener() {
+            private long lastTime = 0;
+
             @Override
             public void onCompassChanged(CompassInfo compass) {
+                // 延迟回调
+                if (delay != 0) {
+                    // 不回调
+                    if (System.currentTimeMillis() - lastTime < delay) {
+                        return;
+                    }
+                    lastTime = System.currentTimeMillis();
+                }
+
                 for (CompassChangedListener listener : mListeners) {
                     listener.onCompassChanged(compass);
                 }
@@ -71,6 +82,14 @@ public final class CompassManager implements LifecycleEventObserver {
         if (!mListeners.contains(listener)) {
             mListeners.add(listener);
         }
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
+
+    public int getDelay() {
+        return delay;
     }
 
     /**
