@@ -8,6 +8,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import com.github.raedev.compass.entity.CompassInfo;
 import com.github.raedev.compass.listener.CompassChangedListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,10 +32,15 @@ public class LocationProvider extends SensorProvider implements LocationListener
     /**
      * 最后一次的位置信息
      */
-    private static final double[] LAST_LOCATION = new double[2];
+    private static Location LAST_LOCATION = null;
 
     private boolean mAvailable = true;
     private final LocationManager mLocationManager;
+
+    @Nullable
+    public static Location getLocation() {
+        return LAST_LOCATION;
+    }
 
     public LocationProvider(Context context, CompassInfo compass, CompassChangedListener listener) {
         super(context, compass, listener);
@@ -71,11 +79,8 @@ public class LocationProvider extends SensorProvider implements LocationListener
                 }
             }
         }
-        if (LAST_LOCATION[0] != 0 && LAST_LOCATION[1] != 0) {
-            Location location = new Location("GPS");
-            location.setLongitude(LAST_LOCATION[0]);
-            location.setLatitude(LAST_LOCATION[1]);
-            return location;
+        if (LAST_LOCATION != null) {
+            return LAST_LOCATION;
         }
         return null;
     }
@@ -83,26 +88,37 @@ public class LocationProvider extends SensorProvider implements LocationListener
     @SuppressLint("MissingPermission")
     @Override
     public void register() {
-        List<String> allProviders = mLocationManager.getAllProviders();
+        List<String> allProviders = new ArrayList<>();
+        allProviders.add(LocationManager.GPS_PROVIDER);
+        allProviders.add(LocationManager.NETWORK_PROVIDER);
         for (String provider : allProviders) {
             if (mLocationManager.isProviderEnabled(provider)) {
-                mLocationManager.requestLocationUpdates(provider, 0, 0, this);
+                Log.d("rae", "注册位置监听：" + provider);
+                mLocationManager.requestLocationUpdates(provider, 1000, 1, this, Looper.getMainLooper());
+            } else {
+                Log.e("rae", "注册位置不可用：" + provider);
             }
+        }
+        Location lastLocation = getLastLocation();
+        if (lastLocation != null) {
+            Log.i("rae", "最后一次位置：" + lastLocation);
+            onLocationChanged(lastLocation);
         }
     }
 
     @Override
     public void unregister() {
+        Log.w("rae", "取消位置监听");
         mLocationManager.removeUpdates(this);
     }
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        LAST_LOCATION[0] = location.getLongitude();
-        LAST_LOCATION[1] = location.getLatitude();
+        LAST_LOCATION = location;
         mCompass.setLongitude(location.getLongitude());
         mCompass.setLatitude(location.getLatitude());
         mCompass.setLocation(location);
+        Log.d("rae", "onLocationChanged: " + location.getLongitude() + "," + location.getLatitude());
         notifyChanged();
     }
 
@@ -110,27 +126,30 @@ public class LocationProvider extends SensorProvider implements LocationListener
 
     @Override
     public void onLocationChanged(@NonNull List<Location> locations) {
-
+        final int size = locations.size();
+        for (int i = 0; i < size; i++) {
+            onLocationChanged(locations.get(i));
+        }
     }
 
     @Override
     public void onFlushComplete(int requestCode) {
-
+        Log.d("rae", "onFlushComplete: " + requestCode);
     }
 
     @Override
     public void onProviderEnabled(@NonNull String provider) {
-
+        Log.d("rae", "onProviderEnabled: " + provider);
     }
 
     @Override
     public void onProviderDisabled(@NonNull String provider) {
-
+        Log.d("rae", "onProviderDisabled: " + provider);
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
+        Log.d("rae", "onStatusChanged: " + provider);
     }
 
     // endregion
