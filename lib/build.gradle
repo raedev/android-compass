@@ -3,15 +3,6 @@ plugins {
     id 'maven-publish'
 }
 
-if (new File(project.projectDir, "upload.gradle").exists()) {
-    ext {
-        ARTIFACT_URL = 'https://github.com/raedev/android-compass'
-        ARTIFACT_GROUP = 'com.github.raedev'
-        ARTIFACT_ID = 'compass'
-        ARTIFACT_VERSION = '1.0.1'
-    }
-    apply from: 'upload.gradle'
-}
 
 android {
     compileSdk 31
@@ -38,30 +29,40 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
 }
 
-//
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            mavenJar(MavenPublication) {
-//                from components.release
-//                groupId = 'com.github.raedev'
-//                artifactId = 'compass'
-//                version = '1.0.0'
-//                pom {
-//                    name = 'android-compass'
-//                    url = 'https://github.com/raedev/android-compass'
-//                    developers {
-//                        developer {
-//                            id = 'RAE'
-//                            name = 'RAE'
-//                            email = 'raedev@qq.com'
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+
+if (new File(project.projectDir, "upload.gradle").exists()) {
+    ext {
+        ARTIFACT_URL = 'https://github.com/raedev/android-compass'
+        ARTIFACT_GROUP = 'com.github.raedev'
+        ARTIFACT_ID = 'compass'
+        ARTIFACT_VERSION = '1.0.1'
+    }
+    apply from: 'upload.gradle'
+} else {
+    afterEvaluate {
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    from components.release
+                    groupId = 'com.github.raedev'
+                    artifactId = 'compass'
+                    version = '1.0.0'
+                    pom {
+                        name = 'android-compass'
+                        url = 'https://github.com/raedev/android-compass'
+                        developers {
+                            developer {
+                                id = 'RAE'
+                                name = 'RAE'
+                                email = 'raedev@qq.com'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
