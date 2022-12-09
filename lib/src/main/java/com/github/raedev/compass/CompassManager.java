@@ -1,6 +1,7 @@
 package com.github.raedev.compass;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
@@ -31,7 +32,6 @@ public final class CompassManager implements LifecycleEventObserver {
     private final List<CompassChangedListener> mListeners = new ArrayList<>();
     private final CompassInfo mCompass = new CompassInfo();
     private final Context mContext;
-    private final CompassChangedListener mProxyEventListener;
     /**
      * 是否运行中
      */
@@ -41,36 +41,35 @@ public final class CompassManager implements LifecycleEventObserver {
     /**
      * 延迟回调时间，默认0为不延迟
      */
-    private int delay = 0;
+    private int mDelay = 0;
+    private final CompassChangedListener mProxyEventListener = new CompassChangedListener() {
+        private long lastTime = 0;
+
+        @Override
+        public void onCompassChanged(CompassInfo compass) {
+            //  延迟回调
+            if (mDelay != 0) {
+                // 不回调
+                if (System.currentTimeMillis() - lastTime < mDelay) {
+                    return;
+                }
+                lastTime = System.currentTimeMillis();
+            }
+            for (CompassChangedListener listener : mListeners) {
+                listener.onCompassChanged(compass);
+            }
+        }
+
+        @Override
+        public void onCompassException(Exception e) {
+            for (CompassChangedListener listener : mListeners) {
+                listener.onCompassException(e);
+            }
+        }
+    };
 
     public CompassManager(Context context) {
         mContext = context;
-        mProxyEventListener = new CompassChangedListener() {
-            private long lastTime = 0;
-
-            @Override
-            public void onCompassChanged(CompassInfo compass) {
-                // 延迟回调
-                if (delay != 0) {
-                    // 不回调
-                    if (System.currentTimeMillis() - lastTime < delay) {
-                        return;
-                    }
-                    lastTime = System.currentTimeMillis();
-                }
-
-                for (CompassChangedListener listener : mListeners) {
-                    listener.onCompassChanged(compass);
-                }
-            }
-
-            @Override
-            public void onCompassException(Exception e) {
-                for (CompassChangedListener listener : mListeners) {
-                    listener.onCompassException(e);
-                }
-            }
-        };
         mLocationProvider = new LocationProvider(mContext, mCompass, mProxyEventListener);
     }
 
@@ -85,11 +84,11 @@ public final class CompassManager implements LifecycleEventObserver {
     }
 
     public void setDelay(int delay) {
-        this.delay = delay;
+        this.mDelay = delay;
     }
 
     public int getDelay() {
-        return delay;
+        return mDelay;
     }
 
     /**
@@ -115,6 +114,7 @@ public final class CompassManager implements LifecycleEventObserver {
         mCurrentSensorProvider = new VectorSensorProvider(mContext, mCompass, mProxyEventListener);
         if (mCurrentSensorProvider.available()) {
             mCurrentSensorProvider.register();
+            Log.d("compassManager", "current sensor provider is " + mCurrentSensorProvider);
             return;
         }
         mCurrentSensorProvider = new DefaultSensorProvider(mContext, mCompass, mProxyEventListener);
@@ -123,6 +123,7 @@ public final class CompassManager implements LifecycleEventObserver {
             return;
         }
         mCurrentSensorProvider.register();
+        Log.d("compassManager", "current sensor provider is " + mCurrentSensorProvider);
     }
 
     @Override

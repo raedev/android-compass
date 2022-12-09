@@ -72,7 +72,7 @@ public abstract class SensorProvider implements SensorEventListener {
      */
     public void register() {
         for (Sensor sensor : mSensors) {
-            mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI);
         }
     }
 

@@ -18,17 +18,18 @@ public class VectorSensorProvider extends SensorProvider {
 
     private final float[] mRotationMatrix = new float[9];
     private final float[] mOrientationAngles = new float[3];
-    private DefaultSensorProvider mDefaultSensorProvider;
-    private int mAzimuth = Integer.MIN_VALUE;
+    private final DefaultSensorProvider mDefaultSensorProvider;
+    private int mDefaultAzimuth;
+    private int mDefaultPitch;
 
     public VectorSensorProvider(Context context, CompassInfo compass, CompassChangedListener listener) {
         super(context, compass, listener);
         register(mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), "旋转矢量传感器");
-        register(mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), "加速度计传感器");
         mDefaultSensorProvider = new DefaultSensorProvider(context, compass, new CompassChangedListener() {
             @Override
             public void onCompassChanged(CompassInfo compass) {
-                mAzimuth = compass.getAzimuth();
+                mDefaultAzimuth = compass.getAzimuth();
+                mDefaultPitch = compass.getPitch();
             }
 
             @Override
@@ -41,7 +42,6 @@ public class VectorSensorProvider extends SensorProvider {
     @Override
     public void register() {
         super.register();
-        // 注册
         mDefaultSensorProvider.register();
     }
 
@@ -53,8 +53,9 @@ public class VectorSensorProvider extends SensorProvider {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        float[] values = event.values;
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            updateAzimuth(event.values);
+            updateAzimuth(values);
         }
     }
 
@@ -71,9 +72,10 @@ public class VectorSensorProvider extends SensorProvider {
             float temp = roll;
             roll = -pitch;
             pitch = temp;
-        } else if (mAzimuth != Integer.MIN_VALUE) {
-            // 竖屏的方位角取默认的
-            azimuth = mAzimuth;
+        } else if (mDefaultPitch >= 90) {
+            // 修正当前手机角度大于90度时，方位角往背后方向偏移。
+            azimuth = mDefaultAzimuth;
+            pitch = -mDefaultPitch;
         }
         update(azimuth, pitch, roll);
     }
