@@ -18,7 +18,7 @@ buildscript {
 }
 // project build.gradle
 dependencies {
-    implementation 'com.github.raedev:compass:$TAG' // TAG取JitPack徽章最新版本
+    implementation 'com.github.raedev:android-compass:1.0.2' // 这里请取JitPack最新版本
 }
 ```
 
